@@ -1,5 +1,8 @@
-import pickle
 import numpy as np
+from pathlib import Path
+import os
+from tqdm import tqdm
+import cv2 as cv
 
 # 层级打印一个字典
 def print_dict(dict_, content=False, level=0):
@@ -18,3 +21,57 @@ def print_dict(dict_, content=False, level=0):
             print('-------------------------------------')
         else:
             print(v.shape) if isinstance(v, np.ndarray) else print('\r')
+
+def get_calib(calib_path):
+    """
+    通过 calib.txt 获得 calib 信息，函数返回一个字典
+    """
+    text = calib_path.read_text()
+    calib = {}
+    for lines in text.split('\n'):
+        label, data = lines.split(':')
+        data = data.split(' ')[1:]
+        data = [float(i) for i in data]
+        data = np.array(data)
+        if label == 'R_rect_00':
+            data = data.reshape((3, 3))
+            data_ = np.zeros((4, 4))
+            data_[3, 3] = 1.0
+            data_[:3, :3] = data
+            calib['R0_rect'] = data_
+        elif label == 'P_rect_02':
+            data = data.reshape((3, 4))
+            data_ = np.zeros((4, 4))
+            data_[3, 3] = 1.0
+            data_[:3, :4] = data
+            calib['P2'] = data_
+        elif label == 'R':
+            data = data.reshape((3, 3))
+            calib['Tr_velo_to_cam'] = data
+        else:
+            data = data.reshape((3, 1))
+            data = np.concatenate((calib['Tr_velo_to_cam'], data), axis=1)
+            data_ = np.zeros((4, 4))
+            data_[3, 3] = 1.0
+            data_[:3, :4] = data
+            calib['Tr_velo_to_cam'] = data_
+    return calib
+
+def concat(data_root:Path):
+    output_path = data_root / 'output'
+    img_path = output_path / 'img'
+    velo_path = output_path / 'velo'
+    concat_path = output_path / 'concat'
+    concat_path.mkdir(parents=True, exist_ok=True)
+
+    img_list = os.listdir(img_path)
+    velo_list = os.listdir(velo_path)
+    pbar = tqdm(img_list)
+    pbar.set_description('concat')
+    for img in pbar:
+        camera = cv.imread(str(img_path / img))
+        velo = cv.imread(str(velo_path / img))
+        factor = velo.shape[1] / camera.shape[1]
+        camera = cv.resize(camera, dsize=None, fx=factor, fy=factor)
+        velo[:camera.shape[0],:camera.shape[1]] = camera
+        cv.imwrite(str(concat_path / img), velo)

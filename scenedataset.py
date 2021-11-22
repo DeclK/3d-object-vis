@@ -4,15 +4,18 @@ import matplotlib.image as Image
 
 
 class SceneDataset:
-    def __init__(self, data_root, result_path):
+    def __init__(self, data_root, result_path, gt_info_file=None):
         self.data_root = data_root
         self.result_file = result_path
-        self.points_path = data_root / 'training' / 'velodyne'
-        self.image_path = data_root / 'training' / 'image_2' 
-        self.kitti_infos_val_file = data_root / 'database_pkl' / 'kitti_infos_val.pkl'
+        self.points_path = data_root  / 'velodyne'
+        self.image_path = data_root  / 'image_2'
+
         self.pred_list = self.get_pickle(self.result_file)
-        self.val_list = self.get_pickle(self.kitti_infos_val_file)
-        # assert len(self.pred_list) == len(self.val_list), "pred & val don't match"
+        self.gt_info_file = gt_info_file
+        # 是否有 gt 选框，一般为 kitti_infos_val.pkl
+        if gt_info_file is not None: 
+            self.val_list = self.get_pickle(self.gt_info_file)
+            assert len(self.pred_list) == len(self.val_list), "pred & val don't match"
     
     def __len__(self):
         return len(self.pred_list)
@@ -31,8 +34,23 @@ class SceneDataset:
         # 获得样本 id
         data_dict = {}
         frame_id = self.pred_list[idx]['frame_id']
-        val_id = self.val_list[idx]['point_cloud']['lidar_idx']
-        assert frame_id == val_id, f'pred_id: {frame_id}, val_id: {val_id} not the same'
+        if self.gt_info_file is not None:
+            val_id = self.val_list[idx]['point_cloud']['lidar_idx']
+            assert frame_id == val_id, f'pred_id: {frame_id}, val_id: {val_id} not the same'
+
+            # 获得 gt_boxes 及其 name: score 标注
+            data_dict['gt_boxes'] = self.val_list[idx]['annos']['gt_boxes_lidar']
+            num_boxes = data_dict['gt_boxes'].shape[0]
+            name = self.val_list[idx]['annos']['name'][:num_boxes]
+            score = [1.0 for i in range(num_boxes)]
+            data_dict['gt_name'] = self.name_with_score(name, score)
+
+            # 获得 calib matrix
+            data_dict['calib'] = dict(
+                Tr_velo_to_cam = self.val_list[idx]['calib']['Tr_velo_to_cam'],
+                P2 = self.val_list[idx]['calib']['P2'],
+                R0_rect = self.val_list[idx]['calib']['R0_rect']
+            )
 
         # 获得 points & pred_boxes
         velo_file = self.points_path / f'{frame_id}.bin'
@@ -46,19 +64,6 @@ class SceneDataset:
         name = self.pred_list[idx]['name']
         data_dict['pred_name'] = self.name_with_score(name, score)
 
-        # 获得 gt_boxes 及其 name: score 标注
-        data_dict['gt_boxes'] = self.val_list[idx]['annos']['gt_boxes_lidar']
-        num_boxes = data_dict['gt_boxes'].shape[0]
-        name = self.val_list[idx]['annos']['name'][:num_boxes]
-        score = [1.0 for i in range(num_boxes)]
-        data_dict['gt_name'] = self.name_with_score(name, score)
-        
-        # 获得 calib matrix
-        data_dict['calib'] = dict(
-            V2C = self.val_list[idx]['calib']['Tr_velo_to_cam'],
-            P2 = self.val_list[idx]['calib']['P2'],
-            R0_rect = self.val_list[idx]['calib']['R0_rect']
-        )
         data_dict['image'] = Image.imread(img_file)
         return data_dict
     
@@ -67,6 +72,9 @@ class SceneDataset:
             return pickle.load(f)
     
     def name_with_score(self, name, score):
+        """
+        将名字和得分以 name: score 的形式，放到一个 array 当中
+        """
         assert len(name) == len(score), "name & score don't match"
         ret_list = []
         for i in range(len(name)):
