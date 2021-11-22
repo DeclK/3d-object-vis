@@ -1,4 +1,3 @@
-from utils import print_dict
 from viewer.viewer import Viewer
 from pathlib import Path
 from scenedataset import SceneDataset
