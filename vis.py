@@ -80,13 +80,14 @@ def kitti_visualization(dataset: SceneDataset, class_list, vis_num, thres = None
                             caption_size=(0.1,0.1),
                             is_label=True
                             )
+                            
+        # 如果使用 kitti raw 数据集则需要将 calib.txt 放到 data_root 下
+        calib_file = dataset.data_root / 'calib.txt'
+        if calib_file.exists():
+            data['calib'] = get_calib(calib_file)
 
-
+        if data.get('calib', None) is not None:
             # set calib matrix
-            if data.get('calib', None) is None:
-                # 处理 kitti raw 数据集
-                calib_file = dataset.data_root / 'calib.txt'
-                data['calib'] = get_calib(calib_file)
             V2C = data['calib']['Tr_velo_to_cam']
             P2 = data['calib']['P2']
             R0_rect = data['calib']['R0_rect']
