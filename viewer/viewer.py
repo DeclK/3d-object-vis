@@ -10,7 +10,7 @@ class Viewer:
     """
     default box type: "OpenPCDet", (x,y,z,l,w,h,yaw)
     """
-    def __init__(self,box_type = "OpenPCDet",bg=(255, 255, 255), offscreen=True):
+    def __init__(self,box_type = "OpenPCDet",bg=(255, 255, 255), offscreen=False):
         self.objects_color_map = generate_objects_color_map('rainbow')
         self.box_type = box_type
         self.vi = Plotter(bg=bg, offscreen=offscreen)
@@ -92,8 +92,8 @@ class Viewer:
         self.r0_rect = r0_rect
 
     def add_points(self,points,
-                   radius = 2,
-                   color = (150,150,150),
+                   radius = 3,
+                   color = 'dimgray',
                    scatter_filed=None,
                    alpha=1,
                    del_after_show='True',
@@ -382,6 +382,12 @@ class Viewer:
                     self.actors.append(new_car)
                 else:
                     self.actors_without_del.append(new_car)
+
+    def add_origin(self):
+        origin = [Arrow((0,0,0), (1,0,0), c='red'),
+                  Arrow((0,0,0), (0,1,0), c='orange'),
+                  Arrow((0,0,0), (0,0,1), c='blue')]
+        self.actors += origin
 
     def add_image(self,im):
         """

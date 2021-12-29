@@ -4,9 +4,17 @@ import matplotlib.image as Image
 
 
 class SceneDataset:
-    def __init__(self, data_root, result_path, gt_info_file=None):
+    def __init__(self, data_root, result_file, gt_info_file=None):
+        """
+        Args:
+            - data_root: Your kitti data dir
+                - velodyne
+                - image_2
+            - result_file: result.pkl path
+            - gt_info_file: kitti_infos_val.pkl path
+        """
         self.data_root = data_root
-        self.result_file = result_path
+        self.result_file = result_file
         self.points_path = data_root  / 'velodyne'
         self.image_path = data_root  / 'image_2'
 
@@ -67,11 +75,13 @@ class SceneDataset:
         data_dict['image'] = Image.imread(img_file)
         return data_dict
     
-    def get_pickle(self, file):
+    @staticmethod
+    def get_pickle(file):
         with open(file, 'rb') as f:
             return pickle.load(f)
     
-    def name_with_score(self, name, score):
+    @staticmethod
+    def name_with_score(name, score):
         """
         将名字和得分以 name: score 的形式，放到一个 array 当中
         """

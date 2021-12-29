@@ -58,20 +58,27 @@ def get_calib(calib_path):
     return calib
 
 def concat(data_root:Path):
-    output_path = data_root / 'output'
-    img_path = output_path / 'img'
-    velo_path = output_path / 'velo'
-    concat_path = output_path / 'concat'
+    """
+    Concat velodyne camera and RGB camera image
+    the dir should arange like this:
+        - data_root
+            - img
+            - velo
+            - (optional) concat: the result will be saved here
+    """
+    img_path = data_root / 'img'
+    velo_path = data_root / 'velo'
+    concat_path = data_root / 'concat'
     concat_path.mkdir(parents=True, exist_ok=True)
 
     img_list = os.listdir(img_path)
     velo_list = os.listdir(velo_path)
-    pbar = tqdm(img_list)
+    pbar = tqdm(range(len(img_list)))
     pbar.set_description('concat')
-    for img in pbar:
-        camera = cv.imread(str(img_path / img))
-        velo = cv.imread(str(velo_path / img))
+    for idx in pbar:
+        camera = cv.imread(str(img_path / img_list[idx]))
+        velo = cv.imread(str(velo_path / velo_list[idx]))
         factor = velo.shape[1] / camera.shape[1]
         camera = cv.resize(camera, dsize=None, fx=factor, fy=factor)
         velo[:camera.shape[0],:camera.shape[1]] = camera
-        cv.imwrite(str(concat_path / img), velo)
+        cv.imwrite(str(concat_path / img_list[idx]), velo)
