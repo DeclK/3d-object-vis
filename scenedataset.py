@@ -7,7 +7,7 @@ class SceneDataset:
     def __init__(self, data_root, result_file, gt_info_file=None):
         """
         Args:
-            - data_root: Your kitti data dir
+            - data_root: kitti data dir
                 - velodyne
                 - image_2
             - result_file: result.pkl path
@@ -30,7 +30,7 @@ class SceneDataset:
     
     def __getitem__(self, idx:int):
         """
-        return idx sample's batch_dict:
+        Return idx sample's batch_dict:
             - points
             - pred_boxes
             - pred_name

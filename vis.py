@@ -1,4 +1,3 @@
-from pickle import NONE
 from viewer.viewer import Viewer
 from scenedataset import SceneDataset
 from tqdm import tqdm
@@ -10,6 +9,7 @@ def build_viewer(box_type="OpenPCDet", bg = (255,255,255), offscreen=False):
 def kitti_visualization(dataset: SceneDataset, class_list, vis_num, thres = None, 
                         save_path: Path=None):
     """
+    Draw kitti scene and inference resuilts
     Args:
         - dataset: SceneDataset
         - class_list: classes need to show
@@ -143,6 +143,8 @@ def seg_vis(velo_root: Path, results, save_path: Path=None):
         
 
 if __name__ == '__main__':
+    # kitti scene script
+
     data_root = Path(r'D:\KITTI_Dataset\training')
     result_file = Path('result.pkl')
     gt_info_file = Path('kitti_infos_val.pkl')
@@ -156,6 +158,9 @@ if __name__ == '__main__':
                   vis_num=5, 
                   thres = 0.7)
     
+
+    # segmentation script
+
     # data_root = Path('./data')
     # velo_root = Path('./data/velo_data')
     # save_path = Path('./data/ouput')

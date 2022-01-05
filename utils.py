@@ -24,7 +24,7 @@ def print_dict(dict_, content=False, level=0):
 
 def get_calib(calib_path):
     """
-    通过 calib.txt 获得 calib 信息，函数返回一个字典
+    Get calib dict from calib.txt (this file is from kitti raw dataset)
     """
     text = calib_path.read_text()
     calib = {}
