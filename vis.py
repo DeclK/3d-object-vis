@@ -9,13 +9,13 @@ def build_viewer(box_type="OpenPCDet", bg = (255,255,255), offscreen=False):
 def kitti_visualization(dataset: SceneDataset, class_list, vis_num, thres = None, 
                         save_path: Path=None):
     """
-    Draw kitti scene and inference resuilts
+    Draw kitti scene and inference results
     Args:
         - dataset: SceneDataset
         - class_list: classes need to show
         - vis_num: number of frames to show
         - thres: object score under thres will not show
-        - save_path: directory to save the visualization result
+        - save_path: directory to save the visualization results
                      if save, the visualization won't show on screen
     """
     offscreen = False
@@ -145,7 +145,7 @@ def seg_vis(velo_root: Path, results, save_path: Path=None):
 if __name__ == '__main__':
     # kitti scene script
 
-    data_root = Path(r'D:\KITTI_Dataset\training')
+    data_root = Path('data_root')
     result_file = Path('result.pkl')
     gt_info_file = Path('kitti_infos_val.pkl')
     dataset = SceneDataset(data_root, result_file, gt_info_file)
@@ -161,12 +161,15 @@ if __name__ == '__main__':
 
     # segmentation script
 
-    # data_root = Path('./data')
-    # velo_root = Path('./data/velo_data')
+    # velo_root = Path('./data/velodyne')
     # save_path = Path('./data/ouput')
     # pred_list = SceneDataset.get_pickle('seg_result.pkl')
 
     # seg_vis(velo_root, pred_list)
+
+
+    # concat script
+
     # merge_data_root = Path('./data/output')
     # concat(merge_data_root)
     
