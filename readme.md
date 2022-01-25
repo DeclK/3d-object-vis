@@ -10,17 +10,17 @@ This repository is based on [3D-Detection-Tracking-Viewer](https://github.com/ha
 
 ### Data
 
-You can put your data like this, just like KITTI
+You can organize your data like this, just like KITTI
 
 ```
 - data_root
-	- velodyne
-	- image_2
+  - velodyne
+  - image_2
 ```
 
 ### Scripts
 
-Main functions are in `vis.py`. Most of the funcionalities are commented, and some were written in Chinese, but overall it's easy to read. Please check the scripts in `vis.py` after `if __name__ == '__main__':` to see the basic usage
+**Main function is in** `vis.py`. Most of the funcionalities are commented, and some were written in Chinese, but overall it's easy to read. Please check the scripts in `vis.py` after `if __name__ == '__main__':` to see the basic usage.
 
 ## Demo
 
