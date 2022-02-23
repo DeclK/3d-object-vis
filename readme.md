@@ -22,6 +22,14 @@ You can organize your data like this, just like KITTI
 
 **Main function is in** `vis.py`. Most of the funcionalities are commented, and some were written in Chinese, but overall it's easy to read. Please check the scripts in `vis.py` after `if __name__ == '__main__':` to see the basic usage.
 
+If you want to visualize your prediction results, you can get your inference results `result.pkl` by running with OpenPCDet project. OR you can try `inference.py` provided in this repo, which is also build on OpenPCDet `demo.py`.
+
+```shell
+python inference.py --cfg_file {CONFIG_FILE} \
+    --ckpt {CKPT} \
+    --data_path {POINT_CLOUD_DATA}
+```
+
 ## Demo
 
 I've made some demo videos to show the results:
