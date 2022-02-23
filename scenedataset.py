@@ -62,7 +62,7 @@ class SceneDataset:
 
         # 获得 points & pred_boxes
         velo_file = self.points_path / f'{frame_id}.bin'
-        img_file= self.image_path / f'{frame_id}.png'
+        img_file = self.image_path / f'{frame_id}.png'
         points = np.fromfile(velo_file, dtype=np.float32).reshape(-1, 4)
         data_dict['points'] = points
         data_dict['pred_boxes'] = self.pred_list[idx]['boxes_lidar']
@@ -72,7 +72,7 @@ class SceneDataset:
         name = self.pred_list[idx]['name']
         data_dict['pred_name'] = self.name_with_score(name, score)
 
-        data_dict['image'] = Image.imread(img_file)
+        data_dict['image'] = Image.imread(str(img_file))
         return data_dict
     
     @staticmethod

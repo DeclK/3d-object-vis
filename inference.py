@@ -39,7 +39,7 @@ class DemoDataset(DatasetTemplate):
     def __getitem__(self, index):
         if self.ext == '.bin':
             points = np.fromfile(self.sample_file_list[index], dtype=np.float32).reshape(-1, 4)
-            frame_id = self.sample_file_list[index].split('.')[0].split('/')[-1]
+            frame_id = self.sample_file_list[index].split('.')[-2].split('/')[-1]
         elif self.ext == '.npy':
             points = np.load(self.sample_file_list[index])
         else:
@@ -148,45 +148,9 @@ def generate_prediction_dicts(batch_dict, pred_dicts, class_names, output_path=N
 
         return annos
 
-def aux_task():
-    args, cfg = parse_config()
-    logger = common_utils.create_logger()
-    logger.info('-----------------Quick Demo of Auxiliary Task-------------------------')
-    demo_dataset = DemoDataset(
-        dataset_cfg=cfg.DATA_CONFIG, class_names=cfg.CLASS_NAMES, training=False,
-        root_path=Path(args.data_path), ext=args.ext, logger=logger
-    )
-    logger.info(f'Total number of samples: \t{len(demo_dataset)}')
-
-    model = build_network(model_cfg=cfg.MODEL, num_class=len(cfg.CLASS_NAMES), dataset=demo_dataset)
-    model.load_params_from_file(filename=args.ckpt, logger=logger, to_cpu=True)
-    model.cuda()
-    model.eval()
-
-    det_annos = []
-    result_file = Path('/OpenPCDet/output/seg_result.pkl')
-    result_file.touch(exist_ok=True)
-    with torch.no_grad():
-        for data_dict in tqdm(demo_dataset):
-            data_dict = demo_dataset.collate_batch([data_dict])
-            load_data_to_gpu(data_dict)
-            pred_dicts = model.forward(data_dict)
-            annos = get_annos(pred_dicts)
-            det_annos.append(annos)
-    with open(result_file, 'wb') as f:
-        pickle.dump(det_annos, f)
-
-def get_annos(pred_dicts):
-    ret = {}
-    ret['frame_id'] = pred_dicts['frame_id'][0]    # str
-    ret['points_seg'] = pred_dicts['points_seg'].numpy()    # np.array
-    return ret
-
-
 if __name__ == '__main__':
     import os
     cur_dir, cwd = Path(__file__).parent, Path.cwd()
     if cur_dir != cwd:
         os.chdir(cur_dir)
     main()
-    # aux_task()
