@@ -86,7 +86,9 @@ def main():
 
     class_names = cfg.CLASS_NAMES
     det_annos = []
-    result_dir = Path('/OpenPCDet/raw_data')
+    result_dir = Path('/OpenPCDet/demo_output')
+    result_dir.mkdir(parents=True, exist_ok=True)
+
     with torch.no_grad():
         for idx, data_dict in enumerate(demo_dataset):
             data_dict = demo_dataset.collate_batch([data_dict])
@@ -94,7 +96,10 @@ def main():
             pred_dicts, _ = model.forward(data_dict)
             annos = generate_prediction_dicts(data_dict, pred_dicts, class_names)
             det_annos += annos
-    with open(result_dir / 'result.pkl', 'wb') as f:
+            
+    file = result_dir / 'result.pkl'
+    file.touch(exist_ok=True)
+    with open(file, 'wb') as f:
         pickle.dump(det_annos, f)
 
     logger.info('Demo done.')
