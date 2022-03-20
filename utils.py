@@ -24,7 +24,8 @@ def print_dict(dict_, content=False, level=0):
 
 def get_calib(calib_path):
     """
-    Get calib dict from calib.txt (this file is from kitti raw dataset)
+    Get calib dict from calib.txt. This file is from kitti raw dataset
+    including calib_cam_to_can.txt and calib_velo_to_cam.txt
     """
     text = calib_path.read_text()
     calib = {}
