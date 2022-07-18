@@ -3,7 +3,7 @@ from scenedataset import SceneDataset
 from tqdm import tqdm
 from utils import *
 
-def build_viewer(box_type="OpenPCDet", bg = (255,255,255), offscreen=False):
+def build_viewer(box_type="OpenPCDet", bg=(255,255,255), offscreen=False):
     return Viewer(box_type=box_type, bg=bg, offscreen=offscreen)
 
 def kitti_visualization(dataset: SceneDataset, class_list, vis_num, thres = None, 

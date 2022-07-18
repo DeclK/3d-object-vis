@@ -196,7 +196,7 @@ class Viewer:
         :param line_width: (float), line width
         :param line_alpha: (float), line transparency
         :param show_ids: (bool), show object ids in the 3D scene
-        :param show_box_info: (bool)，show object infos in the 3D Scene
+        :param show_box_info: (bool), show object infos in the 3D Scene
         :param del_after_show: (bool), clear the boxes after show
         :param add_to_2D_scene: (bool), add the boxes to images
         :return:
@@ -407,7 +407,10 @@ class Viewer:
 
         # self.vi.show(self.actors+self.actors_without_del,resetcam=False)
         self.vi.show(self.actors+self.actors_without_del,
-                    camera=dict(pos=[-20,0,5], viewup=[0, 0, 1], focalPoint=[50, 0, 2], viewAngle=45))
+                    camera=dict(pos=[0,0,150], viewup=[0, 1, 0], focalPoint=[0, 0, 0], viewAngle=45))
+                    # camera shooting direction is default set to x axis
+                    # viewup should be perpendicular to the shooting direction
+                    # focal point is normally set to a point along shooting direction
         if save_name is not None:
             screenshot(save_name)
         self.vi.clear()

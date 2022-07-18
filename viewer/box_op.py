@@ -44,7 +44,7 @@ def get_mesh_boxes(boxes,colors="red",
     :param ids: list(N,), the ID of each box
     :param show_ids: (bool), show object ids in the 3D scene
     :param box_info: (list(N,)), a list of str, the infos of boxes to show
-    :param show_box_info: (bool)，show object infos in the 3D Scene
+    :param show_box_info: (bool), show object infos in the 3D Scene
     :return: (list(N,)), a list of vtk mesh boxes
     """
     vtk_boxes_list = []

@@ -1,0 +1,5 @@
+*.png
+*.pkl
+**pycache**
+playground*
+tempt*

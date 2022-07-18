@@ -22,6 +22,20 @@ You can organize your data like this, just like KITTI
 
 **Main function is in** `vis.py`. Most of the funcionalities are commented, and some were written in Chinese, but overall it's easy to read. Please check the scripts in `vis.py` after `if __name__ == '__main__':` to see the basic usage.
 
+You can also easily start with the codes below
+
+```python
+from viewer.viewer import Viewer
+
+def build_viewer(box_type="OpenPCDet", bg=(255,255,255), offscreen=False):
+    return Viewer(box_type=box_type, bg=bg, offscreen=offscreen)
+
+vi = build_viewer()
+vi.add_points(points)   # (N, 3), (x, y, z)
+vi.add_3D_boxes(boxes)  # (N, 7), (x, y, z, w, h, l, theta)
+vi.show_3D()
+```
+
 If you want to visualize your prediction results, you can get your inference results `result.pkl` by running with OpenPCDet project. OR you can try `inference.py` provided in this repo, which is also built on OpenPCDet `demo.py`.
 
 ```shell
