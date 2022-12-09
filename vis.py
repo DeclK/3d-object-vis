@@ -3,7 +3,10 @@ from scenedataset import SceneDataset
 from tqdm import tqdm
 from utils import *
 
-def build_viewer(box_type="OpenPCDet", bg=(255,255,255), offscreen=False):
+def build_viewer(box_type="OpenPCDet", bg=(255,255,255), offscreen=False, remote=False):
+    # in case you are working on a remote machine, specify DISPLAY value like this
+    # checkout https://github.com/marcomusy/vedo/issues/64  
+    if remote: os.environ['DISPLAY'] = ':99.0'
     return Viewer(box_type=box_type, bg=bg, offscreen=offscreen)
 
 def kitti_visualization(dataset: SceneDataset, class_list, vis_num, thres = None, 

@@ -1,4 +1,10 @@
-This repository is based on [3D-Detection-Tracking-Viewer](https://github.com/hailanyi/3D-Detection-Tracking-Viewer).
+This repository is based on [3D-Detection-Tracking-Viewer](https://github.com/hailanyi/3D-Detection-Tracking-Viewer). But modified slightly for 2 purposes:
+
+1. Easier to save visualization pictures with configurable scale
+   - Add `offscreen` param in `Viewer`
+   - Add `save_name & scale` in `Viewer.show_3D`
+2. Set the camera position at my own preferences
+   - Change `self.vi.show(camera)` settings in `Viewer.show_3D` 
 
 ## Usage
 
@@ -49,5 +55,5 @@ python inference.py --cfg_file {CONFIG_FILE} \
 I've made some demo videos to show the results:
 
 1. [3D Object Detection Visualization Demo](https://www.bilibili.com/video/BV1h3411t7sc)
-2. [3D object Segmentation (Car) Demo](https://www.bilibili.com/video/BV1oT4y1f71D)
+2. [3D Object Segmentation (Car) Demo](https://www.bilibili.com/video/BV1oT4y1f71D)
 
